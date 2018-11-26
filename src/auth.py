@@ -18,7 +18,6 @@ class Authenticate:
     def get_access_token(self):
         if not self.__access_token:
             print("Empty Access Token")
-
         else:
             return self.__access_token
 
