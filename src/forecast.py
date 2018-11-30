@@ -40,12 +40,13 @@ class Forecast:
     #     max_temperature += "°"
     #     return max_temperature
 
-    def display_current_summary(self):
-        print("Current weather for " + self.place)
-        print("{} with a temperature of {}\n".format(self.get_current_summary(), self.get_current_temperature()))
+    def format_current_summary(self):
+        return "Current weather for {}\n{} with a temperature of {}\n".format(self.get_place_name(),
+                                                                             self.get_current_summary(),
+                                                                             self.get_current_temperature())
 
-    def display_weekly_summary(self):
-        print("Weekly weather for {}: \n{}\n".format(self.place, self.get_weekly_summary()))
+    def format_weekly_summary(self):
+        return "Weekly weather for {}: \n{}\n".format(self.place, self.get_weekly_summary())
         # print("In daytime, a temperature high of {} and a low of {}".format(self.weekly_temperature_high(),
         #                                                                     self.weekly_temperature_low()))
 
@@ -55,7 +56,6 @@ class Forecast:
     # Returns a randomly chosen place that is not already randomly chosen, until all places have been chosen
     def _return_random_place(self):
         posted_random_forecast = _read_from_file()
-        print(posted_random_forecast)
         if len(posted_random_forecast) == len(places):
 
             del posted_random_forecast[:]
@@ -71,14 +71,14 @@ class Forecast:
         return self.place
 
 
-random_forecast = Forecast("None")
-
-print(random_forecast.get_place_name())
-random_forecast.display_current_summary()
-
-random_forecast.display_weekly_summary()
-
-
-print(len(places))
-
-
+# random_forecast = Forecast("None")
+#
+# print(random_forecast.get_place_name())
+# print(random_forecast.format_current_summary())
+#
+# print(random_forecast.format_weekly_summary())
+#
+#
+# print(len(places))
+#
+# print(len(_read_from_file()))
