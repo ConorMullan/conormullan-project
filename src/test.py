@@ -8,6 +8,7 @@ posted = []
 
 
 class ForecastTest:
+
     def choose_place():
         if len(posted) == len(places):
             del posted[:]

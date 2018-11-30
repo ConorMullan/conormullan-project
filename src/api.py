@@ -1,16 +1,25 @@
 import tweepy as tp
 from src.forecast import Forecast
-from src.auth import Authenticate
+from src.authenticate import Authenticate
 # import schedule
 # import time
 
 
-auth = Authenticate()
-auth = auth.authenticate_app()
-api = tp.API(auth)
+class API:
+    def __init__(self):
+        self.__auth = Authenticate()
+        self.__auth = self.__auth.authenticate_app()
+        self.__api = tp.API(self.__auth)
+
+    def update_status(self, text):
+        return self.__api.update_status(text)
 
 
-random_forecast = Forecast("None")
-tweet = random_forecast.format_current_summary()
+if __name__ == '__main__':
 
-api.update_status(tweet)
+    api = API()
+
+    random_forecast = Forecast("None")
+    tweet = random_forecast.format_current_summary()
+
+    api.update_status(tweet)

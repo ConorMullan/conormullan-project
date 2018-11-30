@@ -1,7 +1,7 @@
 import unittest
 import tweepy as tp
 from src.key import *
-from src.auth import Authenticate
+from src.authenticate import Authenticate
 
 
 class TestAuthentication(unittest.TestCase):
