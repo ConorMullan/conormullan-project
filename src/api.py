@@ -18,8 +18,10 @@ class API:
 if __name__ == '__main__':
 
     api = API()
-
     random_forecast = Forecast("None")
-    tweet = random_forecast.format_current_summary()
 
-    api.update_status(tweet)
+    tweet_current_summary = random_forecast.format_current_summary()
+    tweet_weekly_summary = random_forecast.format_weekly_summary()
+
+    api.update_status(tweet_weekly_summary)
+    api.update_status(tweet_current_summary)

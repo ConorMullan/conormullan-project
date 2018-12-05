@@ -82,15 +82,3 @@ class Forecast:
         self.__place = choice
         return self.__place
 
-
-# random_forecast = Forecast("None")
-#
-# print(random_forecast.get_place_name())
-# print(random_forecast.format_current_summary())
-#
-# print(random_forecast.format_weekly_summary())
-#
-#
-# print(len(places))
-#
-# print(len(_read_from_file()))
