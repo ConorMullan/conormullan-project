@@ -1,8 +1,9 @@
 import tweepy as tp
 from src.forecast import Forecast
 from src.authenticate import Authenticate
-# import schedule
-# import time
+from datetime import datetime
+import schedule
+import time
 
 
 class API:
@@ -15,8 +16,7 @@ class API:
         return self.__api.update_status(text)
 
 
-if __name__ == '__main__':
-
+def task():
     api = API()
     random_forecast = Forecast("None")
 
@@ -25,3 +25,15 @@ if __name__ == '__main__':
 
     api.update_status(tweet_weekly_summary)
     api.update_status(tweet_current_summary)
+    print("File has executed")
+    print("Date and time:", str(datetime.now()))
+
+
+if __name__ == '__main__':
+    # Documentation for schedule found at https://schedule.readthedocs.io/en/stable/
+    schedule.every().hour.do(task)
+    while True:
+        schedule.run_pending()
+        time.sleep(2)
+
+
