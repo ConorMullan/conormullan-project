@@ -30,7 +30,8 @@ def task():
 
 
 if __name__ == '__main__':
-    # Documentation for schedule found at https://schedule.readthedocs.io/en/stable/
+    task()
+    schedule.every().minute.do(task)
     schedule.every().hour.do(task)
     while True:
         schedule.run_pending()
