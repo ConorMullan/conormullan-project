@@ -1,7 +1,13 @@
+"""Data insertion and cleansing of a raw data file into SQLite DB
+This file was executed and tested within SublimeText3, and have been copy and pasted over to Pycharm Folders"""
+
+
 import sqlite3
 import json
 # import zstandard as zstd
 from datetime import datetime
+
+
 
 timeframe = '2015-01'
 sql_transaction =[]
@@ -10,17 +16,20 @@ connection = sqlite3.connect('{}.db'.format(timeframe))
 cnx = connection.cursor()
 
 
+# Creates a table to store data if not already created
 def create_table():
     cnx.execute("""CREATE TABLE IF NOT EXISTS parent_reply
     (parent_id TEXT PRIMARY KEY, comment_id TEXT UNIQUE, parent TEXT,
     comment TEXT, subreddit TEXT, unix INT, score INT)""")
 
 
+# Replaces functions that could disrupt text and standardises quotation marks
 def format_data(data):
     data = data.replace("\n", " newlinechar ").replace("\r", " newlinechar ").replace('"', "'")
     return data
 
 
+# Checks if data can conform to rules and returns a Boolean response
 def acceptable(data):
     if len(data.split(' ')) > 50 or len(data) < 1:
         return False 
@@ -32,32 +41,35 @@ def acceptable(data):
         return True
 
 
+# Returns a sql query where the comment_Id is the parent_id
 def find_parent(pid):
     try:
         sql = "SELECT comment FROM parent_reply WHERE comment_id = '{}' LIMIT 1".format(pid)
         cnx.execute(sql)
         result = cnx.fetchone()
-        if result != None:
+        if result is not None:
             return result[0]
         else:
             return False
     except Exception as e:
-        return False
+        print('Finding_parent error:', str(e))
 
 
+# Finds the existing score of the entered Id
 def find_existing_score(pid):
     try:
-        sql = "SELECT score FROM parent_reply WHERE comment = '{}' LIMIT 1".format(pid)
+        sql = "SELECT score FROM parent_reply WHERE parent_id = '{}' LIMIT 1".format(pid)
+        cnx.execute(sql)
         result = cnx.fetchone()
-        if result != None:
+        if result is not None:
             return result[0]
         else:
             return False
     except Exception as e:
-        return False
+        print('Finding_existing_score error:', str(e))
 
 
-# Override older comment with newer comment that has a better score
+# Overrides older comment with newer comment that has a parent
 def sql_insert_replace_comment(pid, cid, parent, comment, subreddit, time, score):
     try:
         sql = """UPDATE parent_reply SET parent_id = ?, comment_id = ?, parent = ?, comment = ?,
@@ -69,6 +81,7 @@ def sql_insert_replace_comment(pid, cid, parent, comment, subreddit, time, score
         print('Replace comment error:', str(e))
 
 
+# Inserts comment that has a parent comment value
 def sql_insert_has_parent_comment(pid, cid, parent, comment, subreddit, time, score):
     try:
         sql = """INSERT INTO parent_reply(parent_id, comment_id, parent, comment, subreddit, unix, score)
@@ -80,6 +93,7 @@ def sql_insert_has_parent_comment(pid, cid, parent, comment, subreddit, time, sc
         print('Insert parent comment error:', str(e))
 
 
+# Inserts comment with no higher comments i.e. parent comment
 def sql_insert_no_parent_comment(pid, cid, comment, subreddit, time, score):
     try:
         sql = """INSERT INTO parent_reply(parent_id, comment_id, comment, subreddit, unix, score)
@@ -90,6 +104,7 @@ def sql_insert_no_parent_comment(pid, cid, comment, subreddit, time, score):
         print('Insert_no_parent_comment error:', str(e))
 
 
+# Appends sql statements and executes all of them when length is higher than 1000
 def transaction_builder(sql):
     global sql_transaction
     sql_transaction.append(sql)
@@ -108,7 +123,6 @@ if __name__ == "__main__":
     create_table()
     row_counter = 0
     paired_rows = 0
-
     with open("C:/Users/User/Documents/Ulster/reddit_data/{}/RC_{}".format(timeframe.split('-')[0], timeframe),
               buffering=1000) as f:
         for row in f:
