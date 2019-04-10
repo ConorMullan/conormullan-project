@@ -16,17 +16,15 @@ class API:
     def update_status(self, text):
         return self.__api.update_status(text)
 
-    def user_timeline
-
 
 if __name__ == '__main__':
 
-    # random_forecast = Forecast("None")
-    #
-    # tweet_current_summary = random_forecast.format_current_summary()
-    # tweet_weekly_summary = random_forecast.format_weekly_summary()
-    #
-    # api.update_status(tweet_weekly_summary)
-    # api.update_status(tweet_current_summary)
+    random_forecast = Forecast("None")
+
+    tweet_current_summary = random_forecast.format_current_summary()
+    tweet_weekly_summary = random_forecast.format_weekly_summary()
+    api = API()
+    api.update_status(tweet_weekly_summary)
+    api.update_status(tweet_current_summary)
 
 

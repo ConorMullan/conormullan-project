@@ -1,14 +1,14 @@
-from src.key import *
+from src.key import keys
 from tweepy import OAuthHandler
 
 
 class Authenticate:
 
     def __init__(self):
-        self.__consumer_key = C_KEY
-        self.__consumer_secret = C_SECRET
-        self.__access_token = A_TOKEN
-        self.__access_token_secret = A_TOKEN_SECRET
+        self.__consumer_key = keys["C_KEY"]
+        self.__consumer_secret = keys["C_SECRET"]
+        self.__access_token = keys["A_TOKEN"]
+        self.__access_token_secret = keys["A_TOKEN_SECRET"]
 
     def authenticate_app(self):
         auth = OAuthHandler(self.get_consumer_key(), self.get_consumer_secret())

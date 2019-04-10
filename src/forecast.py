@@ -1,5 +1,5 @@
 from forecastio import load_forecast
-from src.key import D_SECRET_KEY
+from src.key import keys
 from data.places import places
 import pickle
 import random
@@ -27,7 +27,7 @@ class Forecast:
             self.__place = place
         else:
             raise ValueError('Only alphabetical characters accepted')
-        self.__forecast = load_forecast(D_SECRET_KEY, *places[self.__place])
+        self.__forecast = load_forecast(keys['D_SECRET_KEY'], *places[self.__place])
 
     def get_current_summary(self):
         now_summary = self.__forecast.currently().summary
@@ -65,20 +65,23 @@ class Forecast:
         # print("In daytime, a temperature high of {} and a low of {}".format(self.weekly_temperature_high(),
         #                                                                     self.weekly_temperature_low()))
 
-    # Returns a randomly chosen place that is not already randomly chosen, until all places have been chosen
+    # Returns a randomly chosen place that is not already been randomly chosen, until all places have been chosen
     def _return_random_place(self):
-        posted_random_forecast = _read_from_file()
-        if len(posted_random_forecast) == len(places):
+        posted_random_forecasts = _read_from_file()
+        # Deletes list objects when all places have been posted
+        if len(posted_random_forecasts) == len(places):
 
-            del posted_random_forecast[:]
+            del posted_random_forecasts[:]
 
         choice = random.choice(list(places))
-        while choice in posted_random_forecast:
+        # Continues to pick a place until a place not already posted to twitter is found
+        while choice in posted_random_forecasts:
             choice = random.choice(list(places))
 
-        posted_random_forecast.append(choice)
+        # Adds to the list of places posted and sends to file for storage
+        posted_random_forecasts.append(choice)
+        _write_to_file(posted_random_forecasts)
 
-        _write_to_file(posted_random_forecast)
         self.__place = choice
         return self.__place
 
