@@ -7,7 +7,6 @@ from src.authenticate import Authenticate
 from src.stream_listener import *
 from test.config import create_auth
 from mock import mock, patch
-import nose
 from nose.tools import assert_true
 
 TWEET = dict(LARNE='1117215088082128898')
@@ -56,8 +55,6 @@ class TweetsTests(unittest.TestCase):
     def test_two(self, mock_method):
         status = self.my_api.get_status()
         tweets = Tweets(status)
-        actual_id = tweets.get_status_id()
-        actual_text = tweets.get_user_text().split()[1]
         actual_id = tweets.get_status_id()
         actual_text = tweets.get_user_text().split()[1]
         mock_method.assert_called()
@@ -174,6 +171,10 @@ class TweetsTests(unittest.TestCase):
         result = tweets.get_user_status()
         mock_get_status.assert_called()
         self.assertEqual(expected, result)
+
+    @patch.object(tp.API, )
+    def test_create_tweet(self):
+        pass
 
     @patch.object(tp.API, 'update_status')
     @patch.object(tp.API, 'get_status', return_value=streamApi.get_status('1117215088082128898'))

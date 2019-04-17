@@ -28,7 +28,7 @@ connection = sqlite3.connect('{}.db'.format(timeframe))
 limit = 5000
 # Buffer through the database with last unix time
 last_unix = 0
-# current length of rows starts the same as limir
+# current length of rows starts the same as limit
 current_length = limit
 counter = 0
 test_done = False
