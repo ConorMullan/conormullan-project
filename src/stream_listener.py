@@ -151,7 +151,7 @@ class Tweets:
     # - Finally, raises if response is too long
     def create_tweet(self):
         if self.is_valid_tweet():
-            filtered_tweet = self.filter_user_tweet()
+            filtered_tweet = self.filter_user_tweet_forecast()
             print("Filtered tweet: {}".format(filtered_tweet))
 
             if any(s in filtered_tweet for s in places.keys()):
@@ -162,10 +162,10 @@ class Tweets:
 
             else:
                 inference_input = self.filter_user_tweet_chatbot()
-                inference_dict = inference("{}").format(inference_input)
+                inference_dict = inference("{}".format(inference_input))
                 answers = inference_dict["answers"]
                 print("\n Answers: {} \n".format(answers))
-                best_index = inference.get("best_index")
+                best_index = inference_dict.get("best_index")
                 print("Best index: {} \n".format(best_index))
                 # Negative index represents poor results
                 if best_index == -1:
@@ -178,8 +178,10 @@ class Tweets:
                 if not self.response_text:
                     self.response_text = answers[2]
                 print(inference)
+                print("Chatbot response: {}".format(self.response_text))
         else:
-            self.response_text = "Please follow the account to white list you and make sure tweet  "
+            self.response_text = "Please follow the account to white list you and make sure tweet doesn't contain RT." \
+                                 " Thank you"
 
         response = self.str_format_response_tweet()
         if len(response) > 240:

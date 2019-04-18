@@ -45,6 +45,9 @@ class Forecast:
     def get_place_name(self):
         return self.__place
 
+    def get_alert(self):
+        alert = self.__forecast.alerts()
+        return alert
     # def weekly_temperature_low(self):
     #     min_temperature = str(self.forecast.daily().data("temperatureLow"))
     #     min_temperature += "°"
@@ -55,15 +58,18 @@ class Forecast:
     #     max_temperature += "°"
     #     return max_temperature
 
+    # Formats into a string
     def format_current_summary(self):
-        return "Current weather for {}:\n{} with a temperature of {}\n".format(self.get_place_name(),
-                                                                             self.get_current_summary(),
-                                                                             self.get_current_temperature())
+        return "Current weather for {}:\n\n{} with a temperature of {}\n".format(
+            self.get_place_name(), self.get_current_summary().capitalize(), self.get_current_temperature())
 
     def format_weekly_summary(self):
-        return "Weekly weather for {}: \n{}\n".format(self.__place, self.get_weekly_summary())
+        return "Weekly weather for {}: \n\n{}\n".format(self.__place.capitalize(), self.get_weekly_summary())
         # print("In daytime, a temperature high of {} and a low of {}".format(self.weekly_temperature_high(),
         #                                                                     self.weekly_temperature_low()))
+
+    def format_alert(self):
+        return "Alert for {}: \n\n{}".format(self.__place.capitalize(), self.get_alert())
 
     # Returns a randomly chosen place that is not already been randomly chosen, until all places have been chosen
     def _return_random_place(self):
@@ -84,4 +90,3 @@ class Forecast:
 
         self.__place = choice
         return self.__place
-
