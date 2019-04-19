@@ -1,16 +1,12 @@
-
-from tweepy import Stream
-
+import logging
+from tweepy import Stream, TweepError
 import tweepy as tp
-import time
 from src.forecast import Forecast
 from src.authenticate import Authenticate
 from src.stream_listener import ReplyToMentionListener
-# import schedule
-# import time
-# self.__auth = self.__auth.authenticate_app()
-# self.__api = tp.API(self.__auth)
-# self.__api = self.__auth
+import schedule
+import random
+import time
 
 
 class API(object):
@@ -35,24 +31,41 @@ class API(object):
         follower_ids = self.api.followers_ids(self.api.me())
         return follower_ids
 
+    def get_api(self):
+        return self.api
+
+    def get_auth(self):
+        return self.api.auth
+
+
+def job():
+    random_forecast = Forecast("None")
+    summaries = [random_forecast.format_current_summary(), random_forecast.format_weekly_summary()]
+    rnd = random.randint(0, 1)
+    summary = summaries[rnd]
+    print(summary)
+    home_api = API()
+    home_api.update_status(summary)
+
+
+def stream_job():
+    try:
+        my_stream_listener = ReplyToMentionListener()
+        my_stream = Stream(auth=API().get_auth(), listener=my_stream_listener)
+    # CM46_Project
+        my_stream.filter(track=['CM46_Project'])
+    except TweepError as e:
+        logging.exception(e)
+
 
 if __name__ == '__main__':
+    job()
+    stream_job()
 
-    # random_forecast = Forecast("None")
-    # user_forecast = Forecast("dungiven")
-    # print(user_forecast.format_weekly_summary())
-    # print(user_forecast.get_alert())
-    # tweet_current_summary = random_forecast.format_current_summary()
-    # tweet_weekly_summary = random_forecast.format_weekly_summary()
-    api = API()
-    print(api.get_my_follower_ids())
-    # api.update_status(tweet_weekly_summary)
-    # api.update_status(tweet_current_summary)
-    # print(api.get_followers())
-    # ids = api.get_my_follower_ids()
-    # print(ids)
-    # ids = []
+    schedule.every().hour.do(job)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
-    # myStreamListener = ReplyToMentionListener()
-    # myStream = Stream(auth=Authenticate.declare_auth, listener=myStreamListener)
-    # myStream.filter(track=['CM46_Project'])
+
+

@@ -121,7 +121,7 @@ class Tweets:
         tweet = self.filtered_tweet
         print(tweet)
         if tweet is None:
-            tweet = self.filter_user_tweet()
+            tweet = self.filter_user_tweet_forecast()
         for word in tweet.split():
             if word in places.keys():
                 user_place = word
@@ -196,14 +196,14 @@ class Tweets:
         streamApi.update_status(status=response, in_reply_to_status_id=self.get_status_id())
 
 
-if __name__ == '__main__':
-    # Will filter all timeline activities to those that
-    # directly pertain to the user. Once connected to the stream,
-    # activities are passed on to
-    try:
-        myStreamListener = ReplyToMentionListener()
-        myStream = Stream(auth=streamApi.auth, listener=myStreamListener)
-    # CM46_Project
-        myStream.filter(track=['CM46_Project'])
-    except TweepError as e:
-        logging.exception(e)
+# if __name__ == '__main__':
+#     # Will filter all timeline activities to those that
+#     # directly pertain to the user. Once connected to the stream,
+#     # activities are passed on to
+#     try:
+#         myStreamListener = ReplyToMentionListener()
+#         myStream = Stream(auth=streamApi.auth, listener=myStreamListener)
+#     # CM46_Project
+#         myStream.filter(track=['CM46_Project'])
+#     except TweepError as e:
+#         logging.exception(e)

@@ -48,25 +48,21 @@ class Forecast:
     def get_alert(self):
         alert = self.__forecast.alerts()
         return alert
-    # def weekly_temperature_low(self):
-    #     min_temperature = str(self.forecast.daily().data("temperatureLow"))
-    #     min_temperature += "°"
-    #     return min_temperature
-    #
-    # def weekly_temperature_high(self):
-    #     max_temperature = str(self.forecast.daily().data("temperatureHigh"))
-    #     max_temperature += "°"
-    #     return max_temperature
 
     # Formats into a string
     def format_current_summary(self):
-        return "Current weather for {}:\n\n{} with a temperature of {}\n".format(
-            self.get_place_name(), self.get_current_summary().capitalize(), self.get_current_temperature())
+        text = "Current weather for {}:\n\n{} with a temperature of {}\n".format(
+            self.get_place_name().capitalize(), self.get_current_summary(), self.get_current_temperature())
+        if self.get_alert():
+            text += self.format_alert()
+        return text
 
+    # Formats into a string
     def format_weekly_summary(self):
-        return "Weekly weather for {}: \n\n{}\n".format(self.__place.capitalize(), self.get_weekly_summary())
-        # print("In daytime, a temperature high of {} and a low of {}".format(self.weekly_temperature_high(),
-        #                                                                     self.weekly_temperature_low()))
+        text = "Weekly weather for {}: \n\n{}\n".format(self.__place.capitalize(), self.get_weekly_summary())
+        if self.get_alert():
+            text += self.format_alert()
+        return text
 
     def format_alert(self):
         return "Alert for {}: \n\n{}".format(self.__place.capitalize(), self.get_alert())

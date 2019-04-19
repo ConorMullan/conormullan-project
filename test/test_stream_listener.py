@@ -12,34 +12,6 @@ from nose.tools import assert_true
 TWEET = dict(LARNE='1117215088082128898')
 
 
-class MockReplyToMentionListener(StreamListener):
-    def __init__(self, test_case):
-        super().__init__()
-        self.test_case = test_case
-        self.status_count = 0
-        self.status_stop_count = 0
-        self.connect_cb = None
-
-    def on_connect(self):
-        if self.connect_cb:
-            self.connect_cb()
-
-    def on_timeout(self):
-        self.test_case.fail('timeout')
-        return False
-
-    def on_error(self, error):
-        print("Error: {}".format(error))
-        return True
-
-    @mock.patch.object(tp.API, 'update_status')
-    def on_status(self, status):
-        self.status_count += 1
-        self.test_case.assertIsInstance(status, Status)
-        if self.status_stop_count == self.status_count:
-            return False
-
-
 class TweetsTests(unittest.TestCase):
     def setUp(self):
         self.tweet_id = 1117215088082128898
@@ -47,7 +19,6 @@ class TweetsTests(unittest.TestCase):
         self.user_text = "Larne."
         oauth = Authenticate().declare_auth()
         self.my_api = API(auth_handler=oauth)
-
 
     # Tweet id: 1117215088082128898
     # Tweet text: @CM46_Project Larne.
@@ -65,7 +36,7 @@ class TweetsTests(unittest.TestCase):
     def test_search_tweet_for_place(self, mock_get_status):
         status = self.my_api.get_status()
         tweets = Tweets(status)
-        tweets.filter_user_tweet()
+        tweets.filter_user_tweet_forecast()
         place = tweets.search_tweet_for_place()
         print(place)
         mock_get_status.assert_called()
@@ -110,11 +81,11 @@ class TweetsTests(unittest.TestCase):
         self.assertEqual(expected, result)
 
     @patch.object(tp.API, 'get_status', return_value=streamApi.get_status('1117215088082128898'))
-    def test_filter_user_tweet(self, mock_get_status):
+    def test_filter_user_tweet_forecast(self, mock_get_status):
         status = self.my_api.get_status()
         tweets = Tweets(status)
         expected = "cm46project larne"
-        result = tweets.filter_user_tweet()
+        result = tweets.filter_user_tweet_forecast()
         mock_get_status.assert_called()
         self.assertEqual(expected, result)
 
@@ -172,9 +143,14 @@ class TweetsTests(unittest.TestCase):
         mock_get_status.assert_called()
         self.assertEqual(expected, result)
 
-    @patch.object(tp.API, )
-    def test_create_tweet(self):
-        pass
+    @patch.object(tp.API, 'get_status', return_value=streamApi.get_status('1117215088082128898'))
+    def test_filter_user_tweet_chatbot(self, mock_get_status):
+        status = self.my_api.get_status()
+        tweets = Tweets(status)
+        expected = "Larne."
+        result = tweets.filter_user_tweet_chatbot()
+        mock_get_status.assert_called()
+        self.assertEqual(expected, result)
 
     @patch.object(tp.API, 'update_status')
     @patch.object(tp.API, 'get_status', return_value=streamApi.get_status('1117215088082128898'))
